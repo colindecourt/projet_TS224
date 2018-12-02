@@ -21,4 +21,5 @@ y=cos(2*pi*f0*x);
 representation_temp_freq(y, Fe);
 
 %% DFA
-[y_init,a_0,a_1]=DFA(y);
+[y_init,alpha]=DFA(y);
+

@@ -47,21 +47,8 @@ for j=10:20:M/2
     %est visible
     %Exemple avec 3 valeurs de N différentes
     
-    if(N==30)
-        figure,
-        plot(xl);
-        title('Affichage des tendances locales du profil pour N = 30')
-    end
-    if(N==50)
-        figure,
-        plot(xl);
-        title('Affichage des tendances locales du profil pour N = 50')
-    end
-    if(N==490)
-        figure,
-        plot(xl);
-        title('Affichage des tendances locales du profil pour N = 490')
-    end
+    
+    
     %% Calcul de la tendance globale du profil
     
     F_temp=0;
