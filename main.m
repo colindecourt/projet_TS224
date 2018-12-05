@@ -14,8 +14,10 @@ f0=50; %Hz
 x=(1:N)*Te;
 
 % Génération des signaux
-y=cos(2*pi*f0*x); 
-%y=chirp(x, f0, 0.5, 100); % Sinusoide dont la fréquence change au cours du temps
+%y=randn(1,length(x));
+%y=randn(1,N);
+y=cos(2*pi*f0*x);
+
 
 % Representation
 representation_temp_freq(y, Fe);

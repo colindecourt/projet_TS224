@@ -1,5 +1,5 @@
 function [ y_init,alpha ] = DFA( y )
-% DFA
+% Detrended Fluctuation Analysis (DFA)
 %   Idée : Trouver la tendance locale (sur M echanttillons) (attention il peut avoir des discontinuités --> calcul du résidu, de la puissance et de ... )
 % Il faut faire une estimation des moindres carrés
 
@@ -22,7 +22,7 @@ for m=1:M
     
 end
 
-figure, plot(y_init, 'x'); title('Profil du signal'); xlabel('Echantillons') ; ylabel('Amplitude')
+figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons') ; ylabel('Amplitude')
 
 for j=10:20:M/2
     %% Décomposition du profil
@@ -77,18 +77,19 @@ end
 
 
 figure
-plot(log(F(1,:)),log(F(2,:)));
+plot(log(F(1,:)),log(F(2,:)),'o');
 title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
 xlabel('log(F(N)');
 ylabel('log(N)');
-
+hold on
 %% Recherche de la pente alpha de la droite des profils
+t=log(F(1,:));
+y=log(F(2,:));
 
-for i=1:length(F)-1
-    alpha_temp(i) = (log(F(2,i+1))-log(F(2,i)))/(log(F(1,i+1))-log(F(1,i)));
-end
-alpha = mean(alpha_temp); % Pente alpha caractérisant la régularité du signal (pas sur)
-
-
+[r,alpha,b] = regression(t ,y,'one');
+droite = alpha*t+b;
+plot(t,droite);
+legend('Tendance globale du profil','Droite de regression');
+hold off
 end
 
