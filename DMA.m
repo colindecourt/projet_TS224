@@ -3,7 +3,6 @@ function [] = DMA(y)
 
 %% Parametres
 
-F=[];
 M=length(y);
 mu_y=mean(y);
 
@@ -19,11 +18,27 @@ for m=1:M
     y_init(m)=somme;
     
 end
-
-b = 1/M*ones(1,M);
+% figure
+% plot(y_init);
+% hold on
+b = 1/20*ones(1,20);
 a=1;
+f = -1/2:1/256:(1/2-1/256);
+[H,w] = freqz(b,a,2*pi*f);
 
-y_filter = filter(b,a,y_init);
+%% Affichage de la réponse en fréquence et de la phase
+figure
+subplot(1,2,1);
+plot(f,abs(H));
+title('Réponse en fréquence du filtre h_{DMA}');
+xlabel('Frequence (Hz)');
+ylabel('Amplitude');
+subplot(1,2,2)
+plot(f,w);
+title('Phase du filtre h_{DMA}');
+xlabel('Frequence (Hz)');
+ylabel('Phase en rad');
+
 
 end
 
