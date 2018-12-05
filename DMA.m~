@@ -20,10 +20,7 @@ for m=1:M
     
 end
 
-b = 1/M*ones(1,M);
-a=1;
-
-y_filter = filter(b,a,y_init);
+y_filter = filter(b,a,
 
 end
 
