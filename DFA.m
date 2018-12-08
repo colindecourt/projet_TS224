@@ -24,7 +24,7 @@ end
 
 figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons') ; ylabel('Amplitude')
 
-for j=10:20:M/2
+for j=3:5:M/2
     %% Décomposition du profil
     N=j;
     L= floor(M/N);  % Nombre de segments ( pas 1, 2, ni au dela de M/2 car plus d'interet)
