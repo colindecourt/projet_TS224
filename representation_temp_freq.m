@@ -1,5 +1,7 @@
 function [ ] = representation_temp_freq( x, fe)
-% Répresantation temporelle et temps fréquence d'un signal 
+% Répresentation temporelle et temps fréquence d'un signal 
+  % Representation temps-fréquence permet de voir la richesse fréquentielle du signal au cours du temps
+
 
 Te=1/fe; 
 N=length(x);
