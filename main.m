@@ -16,14 +16,16 @@ f0=50; %Hz
 % x=(1:N)*Te;
 % y=cos(2*pi*f0*x);
 
-y=cell2mat(dataEEG(1,1,1));
-y=y';
+y1=cell2mat(dataEEG(1,1,1))';
+y2=cell2mat(dataEEG(1,2,2))';
+
 
 %% Représentation des signaux 
 
-representation_temp_freq(y, Fe);
+representation_temp_freq(y1, Fe, 1);
+representation_temp_freq(y2, Fe, 2);
 
 %% DFA
 
-[y_init,alpha]=DFA(y);
+[y_init,alpha]=DFA(y1);
 
