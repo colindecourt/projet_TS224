@@ -29,3 +29,6 @@ representation_temp_freq(y2, Fe, 2);
 
 [y_init,alpha]=DFA(y1);
 
+
+%% DMA
+DMA(y1,Fe)

@@ -1,6 +1,7 @@
-function [F] = DMA(y,Fe,tendance)
+function [F] = DMA(y,Fe)
 % Detrending Moving Average (DMA)
 
+close all;
 
 %% Parametres
 
@@ -20,17 +21,18 @@ for m=1:M
     
 end
 
-
-for j=3:5:M/2
+F=[];
+N_vec = [11,13,17,21,27,35,47,59,77,101];
+for j=1:length(N_vec) % calcul pour différentes valeurs de N
     
-    
-    N=j;
-    
+    N=N_vec(j);
     b = 1/N*ones(1,N);
     a=1;
     f = -1/2:1/256:(1/2-1/256);
     f1 = -Fe:1/256:Fe; %Pour visualiser tout le signal théorique
     [H,w] = freqz(b,a,2*pi*f);
+    
+    
     
     
     %% Affichage de la réponse en fréquence et de la phase
@@ -60,12 +62,55 @@ for j=3:5:M/2
     
     y_int_filtre = filter(b,a,y_int);
     
-    % Deux solutions pour la suite : soit on calcul les tendances locales
-    % pour chaque N avec y_int_filtre comme pour le DFA puis on soustrait
-    % aux tendances locales de y_int non filtré obtenue avec le DFA. 
-    %Soit j'ai rien pigé de plus et.... Bon courage ;) 
+    %% Calcul du résidu
+    
+    % Prise en compte du retard de groupe pour pouvoir comparer les 2 signaux
+    delay=floor(0.5*(N-1)); % voir théorie %Attention on a pris on dessus, à verif
+    
+    % Décalage du y_init
+    y_int_filtre_delay=y_int_filtre(delay:end); %tendance
+    
+    y_int=y_int(1:end-delay+1); % Permet d'avoir la meme taille que y_int_filtre_delay
+    
+    % Résidu
+    %R=((y_int - y_int_filtre_delay).^2);
+    
+    F_temp=0;
+    for n=1:N
+        F_temp = F_temp+(y_int(n) - y_int_filtre_delay(n)).^2;
+    end
+    F_temp = sqrt((1/N)*F_temp);
+    
+    F=[F [F_temp;N]];
+    
+%     % Affichage
+%     figure
+%     plot(y_int)
+%     hold on
+%     plot(y_int_filtre_delay)
+%     plot(F_temp)
+%     hold off
+%     
     
 end
 
+
+figure
+plot(log(F(1,:)),log(F(2,:)),'o');
+title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
+xlabel('log(F(N)');
+ylabel('log(N)');
+hold on
+
+%% Recherche de la pente alpha de la droite des profils
+
+t=log(F(1,:));
+y=log(F(2,:));
+
+[r,alpha,b] = regression(t ,y,'one');
+droite = alpha*t+b;
+plot(t,droite);
+legend('Tendance globale du profil','Droite de regression');
+hold off
 end
 
