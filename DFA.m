@@ -22,47 +22,22 @@ for m=1:M
 end
 
 figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons') ; ylabel('Amplitude')
-
-for j=3:5:M/2
+N_vec = [11,13,17,21,27,35,47,59,77,101];
+for j=1:length(N_vec)
     
     %% Décomposition du profil
-    N=j;
+    N=N_vec(j);
     L= floor(M/N);  % Nombre de segments ( pas 1, 2, ni au dela de M/2 car plus d'interet)
     
     [a_0,a_1] = moindres_carres(y_init,N,L);
     xl=zeros(N,L);
-    for l=2:L+1 
+    for l=1:L 
         for n=1:N
             p(n)=(l-1)*N+n;
-            xl(n,l-1)=a_1(l-1)*p(n) + a_0(l-1);
+            xl(n,l)=a_1(l)*p(n) + a_0(l);
         end
     end
     xl = reshape(xl,1,N*L);
-    
-    % figure,
-    % plot(xl);
-    % title('Affichage des tendances locales du profil')
-    
-    % Les précédents plots ont été commentés pour plus de visibilité (24 figures environ sinon). 
-    % On remarque que plus N augmente moins le profil est visible
-    
-    % Exemple avec 3 valeurs de N différentes : 
-    
-    if(N==30)
-        figure,
-        plot(xl);
-        title('Affichage des tendances locales du profil pour N = 30')
-    end
-    if(N==50)
-        figure,
-        plot(xl);
-        title('Affichage des tendances locales du profil pour N = 50')
-    end
-    if(N==490)
-        figure,
-        plot(xl);
-        title('Affichage des tendances locales du profil pour N = 490')
-    end
     
     %% Calcul de la tendance globale du profil
     

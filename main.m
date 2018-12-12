@@ -31,4 +31,4 @@ representation_temp_freq(y2, Fe, 2);
 
 
 %% DMA
-DMA(y1,Fe)
+%DMA(y1,Fe)
