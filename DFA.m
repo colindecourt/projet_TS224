@@ -9,7 +9,14 @@ F=[];
 M=length(y);
 mu_y=mean(y);
 
+Fe = 1e3; 
+Te = 1/Fe;
+time = 0:Te:length(y)*Te-Te;
+
 N_vec = [11,13,17,21,27,35,47,59,77,101];
+L=8;
+Nmax = floor(M/L); % Nombre de points par segement
+N_vec = 3:Nmax;
 
 %% Création du profil
 
@@ -25,7 +32,6 @@ for j=1:length(N_vec)
     
     %% Décomposition du profil et tendance locale
     N=N_vec(j);
-    L= floor(M/N);  % Nombre de segments ( pas 1, 2, ni au dela de M/2 car plus d'interet)
     
     % Moindres carrés
     [a_0,a_1] = moindres_carres(y_init,N,L);
@@ -40,6 +46,7 @@ for j=1:length(N_vec)
     end
     xl = reshape(xl,1,N*L);
     
+    
     %% Calcul de la tendance globale du profil
     
     F_temp=0;
@@ -48,11 +55,28 @@ for j=1:length(N_vec)
             F_temp = F_temp+(y_init((l-1)*N+n)-xl(n))^2;
         end
     end
-    F_temp = sqrt((1/L*N)*F_temp);
+    F_temp = sqrt((1/(L*N))*F_temp);
     F = [F [F_temp; N]];
 end
 
+%% Affichage 
 
+% Affichage des tendances locales
+figure
+hold on
+scatter(time, y_init)
+
+min_yint = min(y_init);
+max_yint = max(y_init);
+
+for i=1:L
+    line([i*N*Te, i*N*Te], [min_yint max_yint]) % Affichage droites pour séparer les différents segments
+    line([N*(i-1)*Te, N*i*Te], [a_1(i)*N*(i-1)+a_0(i), a_1(i)*i*N+a_0(i)]); % Tendance locale
+end
+hold off
+title('Profil avec les tendances locales')
+
+% Affichage des tendances locales
 figure
 plot(log(F(1,:)),log(F(2,:)),'o');
 title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
