@@ -9,27 +9,28 @@ F=[];
 M=length(y);
 mu_y=mean(y);
 
+N_vec = [11,13,17,21,27,35,47,59,77,101];
+
 %% Création du profil
 
+y_init=[];
 for m=1:M
-    somme=0;
-    for i=1:m
-        temp=y(i)-mu_y;
-        somme=somme+temp;
-    end
-    y_init(m)=somme;
-    
+    y_init=[y_init sum(y(1:m)-mu_y)];   
 end
 
+% Affichage du profil
 figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons') ; ylabel('Amplitude')
-N_vec = [11,13,17,21,27,35,47,59,77,101];
+
 for j=1:length(N_vec)
     
-    %% Décomposition du profil
+    %% Décomposition du profil et tendance locale
     N=N_vec(j);
     L= floor(M/N);  % Nombre de segments ( pas 1, 2, ni au dela de M/2 car plus d'interet)
     
+    % Moindres carrés
     [a_0,a_1] = moindres_carres(y_init,N,L);
+    
+    % Tendance locale sur chaque segment
     xl=zeros(N,L);
     for l=1:L 
         for n=1:N
