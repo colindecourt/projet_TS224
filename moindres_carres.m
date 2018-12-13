@@ -3,49 +3,37 @@ function [ a0,a1 ] = moindres_carres( y_int, N, L)
 %   Detailed explanation goes here
 
 
-a0=[];
-a1=[];
-X=[];
-Y=[];
+
+a0 =[];
+a1 =[];
 
 % Calcul de a0 et a1 pour chaque segment
 for l=1:L
     
-    x_mean=0;
-    y_mean=0;
-    x2_mean=0;
-    xy_mean=0;
+    x_sum  = 0;
+    x2 = 0;
+    y  = 0;
+    y_sum = 0;
     
     for n=1:N
         
-        % Calcul de X, vecteur contenant tous les x
-        x=(l-1)*N +n;
-        X=[X x]; 
-
-        % Calcul de Y, vecteur contenant tous les y
-        y=y_int(x);
-        Y=[Y y];
+        x=(l-1)*N+n;
+        x_sum  = x_sum  + x;
+        x2 = x2 +x^2;
+        y  = y  + y_int(x);
+        y_sum = y_sum + x*y_int(x);
         
-    end 
-    
-    % Calcul des différents coefficients utiles (voir résolution moindres carrées)
-    x_mean=1/N*sum(X);
-    y_mean=1/N*sum(Y);
-    x2_mean=1/N*sum(X.^2);
-    xy_mean=1/N*sum(X*Y');
-    
-    M1=[1 x_mean; x_mean x2_mean];
-    M2=[y_mean; xy_mean];
+    end
     
     % Résolution matricielle pour trouver A, contenant a0 et a1
-    A=inv(M1)*M2; 
+    M1 = [N, x_sum; x_sum, x2];
+    M2 = [y; y_sum];
+    A = inv(M1)*M2;
     
     % Stockage des aO et a1
-    a0=[a0 A(1)];
-    a1=[a1 A(2)];
-    
-    
-end 
+    a0 = [a0; A(1)];
+    a1 = [a1; A(2)];
+end
 
 
 end
