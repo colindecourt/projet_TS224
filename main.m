@@ -1,7 +1,7 @@
 clear; close all; clc; dbstop if error;
 
 %% Chargement des données 
-%load('dataEEG.mat');
+load('dataEEG.mat');
 
 %% Déclaration des variables
 Fe=1000; %Hz
@@ -11,12 +11,12 @@ f0=50; %Hz
 
 %% Génération des signaux
 
-y1=randn(1,1000);
+%y1=randn(1,1000);
 
 % x=(1:N)*Te;
 % y=cos(2*pi*f0*x);
 
-% y1=cell2mat(dataEEG(1,1,1))';
+y1=cell2mat(dataEEG(1,1,1))';
 % y2=cell2mat(dataEEG(1,2,2))';
 
 
