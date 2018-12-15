@@ -1,4 +1,4 @@
-function [ y_init,alpha ] = DFA( y )
+function [ y_init,alpha ] = DFA( y , N_vec)
 % Detrended Fluctuation Analysis (DFA)
 %   Idée : Trouver la tendance locale (sur M echanttillons) (attention il peut avoir des discontinuités --> calcul du résidu, de la puissance et de ... )
 % Il faut faire une estimation des moindres carrés
@@ -12,8 +12,6 @@ mu_y=mean(y);
 Fe = 1e3; 
 Te = 1/Fe;
 time = 0:Te:length(y)*Te-Te;
-
-N_vec = [11,13,17,21,27,35,47,59,77,101];
 
 
 %% Création du profil

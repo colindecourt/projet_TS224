@@ -1,4 +1,4 @@
-function [F] = DMA(y,Fe)
+function [alpha] = DMA(y,Fe, N_vec)
 % Detrending Moving Average (DMA)
 
 close all;
@@ -11,27 +11,28 @@ mu_y=mean(y);
 
 %% Création du profil
 
+y_int=[];
 for m=1:M
-    somme=0;
-    for i=1:m
-        temp=y(i)-mu_y;
-        somme=somme+temp;
-    end
-    y_int(m)=somme;
-    
+    y_int=[y_int sum(y(1:m)-mu_y)];
 end
 
 F=[];
-N_vec = [11,13,17,21,27,35,47,59,77,101];
 for j=1:length(N_vec) % calcul pour différentes valeurs de N
     
     N=N_vec(j);
-    b = 1/N*ones(1,N);
-    a=1;
-    f = -1/2:1/256:(1/2-1/256);
-    f1 = -Fe:1/256:Fe; %Pour visualiser tout le signal théorique
-    [H,w] = freqz(b,a,2*pi*f);
     
+    % Fontion de transfert du filtre
+%     b = 1/N*ones(1,N); Surement FAUX !
+%     a=1;
+    
+    b=[1 zeros(1,N-2) -1]; % Numérateur
+    a=N*[1 -1 zeros(1,N-2)]; % Dénominateur
+    
+    
+    % Reponse en fréquence et en phase
+    f = -1/2:1/256:(1/2-1/256);
+    f1 = -Fe:1/256:Fe; % Pour visualiser tout le signal théorique
+    [H,w] = freqz(b,a,2*pi*f);
     
     
     
@@ -57,60 +58,56 @@ for j=1:length(N_vec) % calcul pour différentes valeurs de N
     
     
     
-    
     %% Filtrage du profil y_int
+    yint_filtre = filter(b,a,y_int);
     
-    y_int_filtre = filter(b,a,y_int);
+    
+    %% Prise en compte du retard induit par le filtre
+    
+    delay=floor(0.5*(N-1)); % Attention on a pris on dessus, à verif ds théorie
+    yint_filtre_delay=yint_filtre(delay:end); % Tendance
+    
+    % Permet d'avoir la meme taille que y_int_filtre_delay
+    y_int=y_int(1:end-delay+1);
+    
     
     %% Calcul du résidu
     
-    % Prise en compte du retard de groupe pour pouvoir comparer les 2 signaux
-    delay=floor(0.5*(N-1)); % voir théorie %Attention on a pris on dessus, à verif
-    
-    % Décalage du y_init
-    y_int_filtre_delay=y_int_filtre(delay:end); %tendance
-    
-    y_int=y_int(1:end-delay+1); % Permet d'avoir la meme taille que y_int_filtre_delay
-    
-    % Résidu
-    %R=((y_int - y_int_filtre_delay).^2);
-    
     F_temp=0;
     for n=1:N
-        F_temp = F_temp+(y_int(n) - y_int_filtre_delay(n)).^2;
+        F_temp = F_temp+(y_int(n) - yint_filtre_delay(n)).^2;
     end
     F_temp = sqrt((1/N)*F_temp);
     
     F=[F [F_temp;N]];
     
-%     % Affichage
-%     figure
-%     plot(y_int)
-%     hold on
-%     plot(y_int_filtre_delay)
-%     plot(F_temp)
-%     hold off
-%     
+    %     % Affichage
+    %     figure
+    %     plot(y_int)
+    %     hold on
+    %     plot(y_int_filtre_delay)
+    %     plot(F_temp)
+    %     hold off
+    %
     
 end
 
-
 figure
-plot(log(F(1,:)),log(F(2,:)),'o');
+plot(log(F(2,:)),log(F(1,:)),'o');
 title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
 xlabel('log(F(N)');
 ylabel('log(N)');
 hold on
 
 %% Recherche de la pente alpha de la droite des profils
-
-t=log(F(1,:));
-y=log(F(2,:));
+t=log(F(2,:));
+y=log(F(1,:));
 
 [r,alpha,b] = regression(t ,y,'one');
 droite = alpha*t+b;
 plot(t,droite);
 legend('Tendance globale du profil','Droite de regression');
 hold off
+
 end
 
