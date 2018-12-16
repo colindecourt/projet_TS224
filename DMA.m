@@ -1,32 +1,29 @@
-function [alpha] = DMA(y,Fe, N_vec)
+function [alpha] = DMA(Y,Fe, Nens)
 % Detrending Moving Average (DMA)
 
 close all;
 
 %% Parametres
 
-M=length(y);
-mu_y=mean(y);
+M=length(Y);
+mu_y=mean(Y);
 
 
 %% Création du profil
 
 y_int=[];
 for m=1:M
-    y_int=[y_int sum(y(1:m)-mu_y)];
+    y_int=[y_int sum(Y(1:m)-mu_y)];
 end
 
 F=[];
-for j=1:length(N_vec) % calcul pour différentes valeurs de N
+for j=1:length(Nens) % calcul pour différentes valeurs de N
     
-    N=N_vec(j);
+    N=Nens(j);
     
-    % Fontion de transfert du filtre
-%     b = 1/N*ones(1,N); Surement FAUX !
-%     a=1;
-    
-    b=[1 zeros(1,N-2) -1]; % Numérateur
-    a=N*[1 -1 zeros(1,N-2)]; % Dénominateur
+    % Fontion de transfert du filtre    
+    b=[1 zeros(1,N-1) -1]; % Numérateur
+    a=N*[1 -1]; % Dénominateur
     
     
     % Reponse en fréquence et en phase
@@ -64,22 +61,23 @@ for j=1:length(N_vec) % calcul pour différentes valeurs de N
     
     %% Prise en compte du retard induit par le filtre
     
-    delay=floor(0.5*(N-1)); % Attention on a pris on dessus, à verif ds théorie
+    delay=floor((N-1)/2)+1; % Attention on a pris on dessus, à verif ds théorie
     yint_filtre_delay=yint_filtre(delay:end); % Tendance
     
     % Permet d'avoir la meme taille que y_int_filtre_delay
-    y_int=y_int(1:end-delay+1);
+   % y_int=y_int(1:end-delay+1);
     
     
     %% Calcul du résidu
     
     F_temp=0;
-    for n=1:N
+    L=length(yint_filtre_delay);
+    for n=1:L
         F_temp = F_temp+(y_int(n) - yint_filtre_delay(n)).^2;
     end
-    F_temp = sqrt((1/N)*F_temp);
+    F_temp = sqrt((1/L)*F_temp);
     
-    F=[F [F_temp;N]];
+    F=[F F_temp];
     
     %     % Affichage
     %     figure
@@ -92,20 +90,27 @@ for j=1:length(N_vec) % calcul pour différentes valeurs de N
     
 end
 
+%% Recherche de la pente alpha de la droite des profils
+
+X=log(Nens);
+Y=log(F);
+
+[r,alpha,b] = regression(X ,Y,'one');
+droite = alpha*X+b;
+
+%% Affichage
 figure
-plot(log(F(2,:)),log(F(1,:)),'o');
+
+% F(N)
+plot(X,Y,'o');
+hold on
+
+% Droite de régression
+plot(X,droite);
+
 title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
 xlabel('log(F(N)');
 ylabel('log(N)');
-hold on
-
-%% Recherche de la pente alpha de la droite des profils
-t=log(F(2,:));
-y=log(F(1,:));
-
-[r,alpha,b] = regression(t ,y,'one');
-droite = alpha*t+b;
-plot(t,droite);
 legend('Tendance globale du profil','Droite de regression');
 hold off
 
