@@ -98,20 +98,20 @@ Y=log(F);
 droite = alpha*X+b;
 
 %% Affichage
-figure
-
-% F(N)
-plot(X,Y,'o');
-hold on
-
-% Droite de régression
-plot(X,droite);
-
-title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
-xlabel('log(F(N)');
-ylabel('log(N)');
-legend('Tendance globale du profil','Droite de regression');
-hold off
+% figure
+% 
+% % F(N)
+% plot(X,Y,'o');
+% hold on
+% 
+% % Droite de régression
+% plot(X,droite);
+% 
+% title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
+% xlabel('log(F(N)');
+% ylabel('log(N)');
+% legend('Tendance globale du profil','Droite de regression');
+% hold off
 
 end
 
