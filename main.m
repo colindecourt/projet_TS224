@@ -9,6 +9,7 @@ N=1024;
 Te=1/Fe;
 f0=50; %Hz
 N_vec = [11,13,17,21,27,35,47,59,77,101];
+
 %% Génération des signaux
 
 %y1=randn(1,1000);
@@ -27,8 +28,8 @@ y1=cell2mat(dataEEG(1,1,1))';
 
 %% DFA
 
-%[y_init,alpha]=DFA(y1, N_vec);
+[y_init,alpha_DFA]=DFA(y1, N_vec);
 
 
 %% DMA
-alpha=DMA(y1,Fe, N_vec)
+alpha_DMA=DMA(y1,Fe, N_vec)

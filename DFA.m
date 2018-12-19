@@ -22,7 +22,7 @@ for m=1:M
 end
 
 % Affichage du profil
-figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons') ; ylabel('Amplitude')
+figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons'); ylabel('Amplitude')
 
 for j=1:length(N_vec)
     
@@ -44,8 +44,7 @@ for j=1:length(N_vec)
     xl = reshape(xl,1,N*L);
     
     
-    %% Calcul de la tendance globale du profil
-    
+    %% Calcul de la tendance globale du profil  
     F_temp=0;
     for l=1:L
         for n=1:N

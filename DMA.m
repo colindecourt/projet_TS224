@@ -17,15 +17,14 @@ for m=1:M
 end
 
 F=[];
-for j=1:length(Nens) % calcul pour différentes valeurs de N
+for j=1:length(Nens) % Calcul pour différentes valeurs de N
     
     N=Nens(j);
     
     % Fontion de transfert du filtre    
     b=[1 zeros(1,N-1) -1]; % Numérateur
     a=N*[1 -1]; % Dénominateur
-    
-    
+       
     % Reponse en fréquence et en phase
     f = -1/2:1/256:(1/2-1/256);
     f1 = -Fe:1/256:Fe; % Pour visualiser tout le signal théorique
