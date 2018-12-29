@@ -22,7 +22,7 @@ for m=1:M
 end
 
 % Affichage du profil
-%figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons'); ylabel('Amplitude')
+figure, plot(y_init); title('Profil du signal'); xlabel('Echantillons'); ylabel('Amplitude')
 
 for j=1:length(N_vec)
     
@@ -59,27 +59,30 @@ end
 %% Affichage 
 
 % Affichage des tendances locales
-% figure
-% hold on
-% scatter(time, y_init)
+figure
+hold on
+scatter(time, y_init)
 
 min_yint = min(y_init);
 max_yint = max(y_init);
 
 for i=1:L
-    line([i*N*Te, i*N*Te], [min_yint max_yint]) % Affichage droites pour séparer les différents segments
-    line([N*(i-1)*Te, N*i*Te], [a_1(i)*N*(i-1)+a_0(i), a_1(i)*i*N+a_0(i)]); % Tendance locale
+    line([i*N*Te, i*N*Te], [min_yint max_yint], 'Color','black') % Affichage droites pour séparer les différents segments
+    line([N*(i-1)*Te, N*i*Te], [a_1(i)*N*(i-1)+a_0(i), a_1(i)*i*N+a_0(i)], 'LineWidth',2,...
+   'Color','red' ); % Tendance locale
 end
-% hold off
-% title('Profil avec les tendances locales')
+hold off
+legend('Profil','Droites de séparation','Tendances locales');
+title('Profil avec les tendances locales')
+xlabel('Echantillons'), ylabel('Amplitude')
 
 % Affichage des tendances locales
-% figure
-% plot(log(F(2,:)),log(F(1,:)),'o');
-% title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
-% xlabel('log(F(N)');
-% ylabel('log(N)');
-% hold on
+figure
+plot(log(F(2,:)),log(F(1,:)),'o');
+title('Droite représentant les valeurs des profils globals pour differentes valeurs de N');
+xlabel('log(F(N)');
+ylabel('log(N)');
+hold on
 
 %% Recherche de la pente alpha de la droite des profils
 
@@ -88,9 +91,10 @@ y=log(F(1,:));
 
 [r,alpha,b] = regression(t ,y,'one');
 droite = alpha*t+b;
-% plot(t,droite);
-% legend('Tendance globale du profil','Droite de regression');
-% hold off
+
+plot(t,droite);
+legend('Tendance globale du profil','Droite de regression');
+hold off
 
 end
 

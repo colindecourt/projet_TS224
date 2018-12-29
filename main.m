@@ -12,15 +12,19 @@ N_vec = [11,13,17,21,27,35,47,59,77,101];
 
 %% Génération des signaux
 
-y_bb=randn(1,1000);
-
+% Cosinus
 x=(1:N)*Te;
 y_cos=cos(2*pi*f0*x);
 
+% EEG
 y1=cell2mat(dataEEG(1,2,2))';
-
 y2=cell2mat(dataEEG(2,1,4))';
 
+% Signaux synthétiques à régularité connue
+b_blanc= randn(1,1000);
+b_rouge= rednoise(1,1000);
+b_bleu= bluenoise(1,1000);
+b_rose= pinknoise(1,1000);
 
 %% Représentation des signaux
 
@@ -31,9 +35,11 @@ y2=cell2mat(dataEEG(2,1,4))';
 
 %% DFA
 
-%y1=cell2mat(dataEEG(2,1,4))';
+y1=cell2mat(dataEEG(2,1,4))';
 
-%[y_init,alpha_DFA]=DFA(y1, N_vec);
+
+
+[y_init,alpha_DFA]=DFA(b_blanc, N_vec);
 
 
 %% DMA
