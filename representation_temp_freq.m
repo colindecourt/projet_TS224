@@ -34,7 +34,7 @@ ylabel('Amplitude')
 subplot(2,1,2);
 Nx = length(x);
 nsc = floor(Nx/30); % fenêtre
-nov = floor(nsc/4); % noverlap
+nov = floor(nsc/5); % noverlap
 nff = max(256,2^nextpow2(nsc)); % nfft
 
 spectrogram(x,hamming(nsc),nov,nff, fe, 'yaxis');
